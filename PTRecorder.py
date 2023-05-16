@@ -18,16 +18,30 @@ TODO:
 
 class PTRecorder:
     def __init__(self, oauth_token:str, bearer_token:str, client_id:str):
+        """
+        oauth_token :   Twitch Aauth Token.
+        bearer_token :  Twitch Bearer Token. 해당 토큰은 사용기간이 약 60일로, 만료시 재발급 받아야 함.
+        client_id :     Twitch Client ID.
+        """
         self.oauth_token = oauth_token
         self.bearer_token = bearer_token
         self.client_id = client_id
         self.headers = {'Authorization': 'Bearer '+self.bearer_token, 'Client-ID': self.client_id}
 
-    def getNickname(self, login_id:str) -> str:
-        headers = self.headers
-        req = requests.get('https://api.twitch.tv/helix/users?login='+login_id, headers=headers).json()
+    def getUserID(self, login_id:str) -> str:
+        req = requests.get('https://api.twitch.tv/helix/users?login='+login_id, headers=self.headers).json()
         id = req['data'][0]['id']
         nick = req['data'][0]['display_name'].strip('_')
-        req = requests.get('https://api.twitch.tv/helix/channels?broadcaster_id='+id, headers=headers).json()
+        return id, nick
+    
+    def __getStreamTitlePrivate(self, user_id:str) -> str:
+        req = requests.get('https://api.twitch.tv/helix/channels?broadcaster_id='+id, headers=self.headers).json()
         title = req['data'][0]['title']
-        return nick, title
+        return title
+
+    def getStreamTitle(self, user_id:str) -> str:
+        
+        
+
+
+PTRecorder()
